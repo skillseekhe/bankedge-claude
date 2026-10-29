@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1e3a8a">
+<title>BankEdge AI</title>
+<style>
+:root{--b9:#1e3a8a;--b8:#1e40af;--b7:#1d4ed8;--b6:#2563eb;--b1:#dbeafe;--b0:#eff6ff;--g:#059669;--g0:#ecfdf5;--r:#dc2626;--am:#fbbf24;--bg:#f1f5f9;--tx:#0f172a;--mu:#64748b;--bd:#e2e8f0}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 system-ui,-apple-system,Roboto,sans-serif;-webkit-text-size-adjust:100%}
+#shell{max-width:520px;margin:0 auto;min-height:100vh;min-height:100dvh;background:#f8fafc;padding-bottom:76px}
+header{position:sticky;top:0;z-index:20;background:var(--b9);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+header h1{margin:0;font-size:18px;display:flex;gap:8px;align-items:center}
+header small{display:block;color:#bfdbfe;font-size:11px;margin-top:2px}
+.tag{background:var(--am);color:var(--b9);font-size:10px;font-weight:800;padding:2px 6px;border-radius:5px}
+.pill{border:1px solid #3b82f6;background:#172554;color:#dbeafe;border-radius:99px;padding:6px 10px;font-size:11px;font-weight:700;display:flex;gap:6px;align-items:center}
+.dot{width:8px;height:8px;border-radius:50%;background:#94a3b8}.dot.on{background:#34d399}
+main{padding:14px;display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+main>*{min-width:0}
+.card{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:14px;box-shadow:0 1px 2px #0001}
+.hero{background:linear-gradient(90deg,var(--b8),var(--b6));color:#fff;border:0}
+.hero .k{font-size:11px;color:#bfdbfe;text-transform:uppercase;font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid #93c5fd66;text-align:center}
+.stats b{display:block;font-size:19px}.stats span{font-size:10px;color:#bfdbfe}
+h2,h3{margin:0 0 4px;font-size:15px}.mu{color:var(--mu);font-size:12px}
+.row{display:flex;gap:8px;align-items:center}.row>*{flex:1;min-width:0}.wrap{flex-wrap:wrap}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.btn{border:0;background:var(--b7);color:#fff;font-weight:700;font-size:13px;padding:11px 14px;border-radius:12px;width:100%;cursor:pointer;text-align:center;text-decoration:none;display:block}
+.btn:active{transform:scale(.98)}.btn[disabled]{opacity:.55}
+.btn.dark{background:#1e293b}.btn.green{background:var(--g)}.btn.ghost{background:#fff;color:var(--b7);border:1px solid var(--bd)}.btn.red{background:var(--r)}
+.btn.sm{padding:7px 10px;font-size:12px;border-radius:9px;width:auto;display:inline-block}
+.chip{border:1px solid var(--bd);background:#fff;color:#334155;border-radius:99px;padding:7px 12px;font-size:12px;font-weight:600;white-space:nowrap;flex:none;cursor:pointer}
+.chip.on{background:var(--b7);color:#fff;border-color:var(--b7)}.chip.g.on{background:var(--g);border-color:var(--g)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+label{display:block;font-size:12px;font-weight:600;color:#334155;margin-top:10px}
+input,select,textarea{width:100%;margin-top:4px;font:inherit;font-size:16px;padding:10px 12px;border:1px solid #cbd5e1;border-radius:12px;background:#fff;color:var(--tx)}
+textarea{min-height:110px;resize:vertical}input:focus,select:focus,textarea:focus{outline:2px solid var(--b6);border-color:transparent}
+.out{white-space:pre-wrap;word-wrap:break-word;background:#f8fafc;border:1px solid var(--bd);border-radius:12px;padding:12px;font-size:13px;line-height:1.55;margin-top:10px}
+.cell{border:1px solid var(--bd);background:#f8fafc;border-radius:12px;padding:8px 4px;text-align:center;cursor:pointer;font:inherit;color:inherit}
+.cell b{display:block;font-size:17px;color:var(--b7)}.cell span{display:block;font-size:10.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cell i{font-size:9px;font-style:normal;font-weight:700;color:var(--g)}
+.cell.bad b,.cell.bad i{color:#d97706}
+#chat{height:300px;overflow-y:auto;background:#f1f5f9;border:1px solid var(--bd);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.m{max-width:85%;padding:9px 11px;border-radius:16px;font-size:13px;white-space:pre-wrap;word-wrap:break-word}
+.m.lead{background:#fff;border:1px solid var(--bd);align-self:flex-start;border-top-left-radius:4px}
+.m.bot,.m.me{background:var(--g);color:#fff;align-self:flex-end;border-top-right-radius:4px}
+.m small{display:block;text-align:right;font-size:9.5px;opacity:.7;margin-top:3px}.m a{color:#d1fae5;font-size:10px;margin-left:6px}
+.typing{opacity:.7;font-style:italic}
+nav{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:0 auto;background:#fff;border-top:1px solid var(--bd);display:flex;padding:6px 4px calc(6px + env(safe-area-inset-bottom));z-index:30}
+nav button{flex:1;background:none;border:0;font:inherit;font-size:10px;color:#94a3b8;font-weight:600;display:grid;gap:2px;justify-items:center;padding:4px 0;cursor:pointer}
+nav button span{font-size:19px}nav button.on{color:var(--b8);font-weight:800}
+#toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 16px;border-radius:12px;font-size:13px;z-index:99;max-width:90%;display:none;text-align:center}
+.ov{position:fixed;inset:0;background:#0008;z-index:60;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:#fff;width:100%;max-width:520px;border-radius:20px 20px 0 0;padding:16px;max-height:90vh;overflow-y:auto}
+.sheet .row{margin-top:14px}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;background:var(--b1);color:var(--b8)}
+.hist{border-top:1px solid var(--bd);padding-top:10px;margin-top:10px;font-size:12px;white-space:pre-wrap}
+.sw{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
+.note{background:#fffbeb;border:1px solid #fde68a;color:#92400e;border-radius:12px;padding:10px;font-size:12px}
+</style>
+</head>
+<body>
+<div id="app"></div><div id="toast"></div><div id="modal"></div>
+<script>
+(()=>{
+'use strict';
+const KEY='bankedge.v2';
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const inr=n=>'₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:1});
+const STATUSES=['New','Hot Lead','Follow-up','Walk-in Booked','Enrolled','Lost'];
+const fmt=t=>esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/^#{1,6}\s*/gm,'').replace(/^\s*[*-]\s+/gm,'• ');
+
+/* ---------- state ---------- */
+const DEF=()=>{const t=Date.now();return{
+ settings:{apiKey:'',model:'gemini-3.8-flash',auto:true},
+ profile:{name:'BankEdge Gurugram',address:'Office No. FF9, Spanish Court, Near Krishna Chowk, Palam Vihar, Sector 2, Gurugram',phone:'+91 98188 45902',program:'30-Day PROBE Banking Certification',hours:'Open until 6:30 PM',eligibility:'Graduates (B.Com / BBA / BA), age under 27',highlights:'Placement assistance with interview drives at HDFC, ICICI and Axis Bank; real core banking software training; guidance by experienced bankers'},
+ leads:[
+  {id:uid(),name:'Aman Verma',degree:'B.Com Fresher (2026)',phone:'+91 98712 34510',status:'Hot Lead',goal:'ICICI / HDFC Officer',created:t,sample:1,msgs:[
+   {id:uid(),from:'lead',text:'Hello, I recently completed my B.Com from MDU Rohtak. Do you offer placement assistance in Gurugram private banks?',t:t-420000},
+   {id:uid(),from:'bot',text:'Namaste! Yes, BankEdge Gurugram offers the 30-Day PROBE Banking Certification with interview drives at HDFC, ICICI and Axis Bank. Are you under 27 years of age?',t:t-360000},
+   {id:uid(),from:'lead',text:'Yes, I am 22. Can I visit your Spanish Court center today?',t:t-240000}]},
+  {id:uid(),name:'Sneha Rao',degree:'BBA Finance (2025)',phone:'+91 98114 88219',status:'Walk-in Booked',goal:'Axis Bank Deputy Manager',created:t,sample:1,msgs:[{id:uid(),from:'me',text:'Booking confirmed for Saturday 11:30 AM.',t:t-3600000}]},
+  {id:uid(),name:'Vikram Chauhan',degree:'BA Graduate (2026)',phone:'+91 99531 00293',status:'Follow-up',goal:'Kotak Mahindra RM',created:t,sample:1,msgs:[{id:uid(),from:'lead',text:'Will check with father and call back.',t:t-86400000}]}],
+ posts:[],
+ ranks:[['Krishna Chowk',1],['Spanish Court Sec 2',1],['Palam Vihar C1',2],['Sector 23 Market',2],['Sheetla Mata Rd',3],['Sector 14 Gurugram',4],['Cyber Hub / DLF',6],['Dundahera Border',3],['Bijwasan Rly Stn',5]].map(([area,rank])=>({area,rank})),
+ ads:{daily:450,spend:3150,leads:27}
+};};
+let S=(()=>{const d=DEF();try{const r=JSON.parse(localStorage.getItem(KEY)||'null');if(r){return{...d,...r,settings:{...d.settings,...r.settings},profile:{...d.profile,...r.profile},ads:{...d.ads,...r.ads}}}}catch(e){}return d})();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const ui={tab:'home',lead:null,role:'lead',draft:'',busy:{},
+ out:{plan:'',post:'',review:'',profile:'',ads:''},
+ post:{topic:'batch',custom:'',tone:'Urgent & High Energy',lang:'English'},
+ review:{stars:'5',text:''},
+ adg:{goal:'WhatsApp enquiries',audience:'Age 20-26, within 12 km of Palam Vihar, Gurugram',budget:'450'}};
+const root=p=>p.startsWith('S.')?[S,p.slice(2)]:[ui,p.slice(3)];
+const getPath=p=>{const[o,k]=root(p);return k.split('.').reduce((a,x)=>a?.[x],o)};
+const setPath=(p,v)=>{const[o,k]=root(p);const ks=k.split('.');const last=ks.pop();ks.reduce((a,x)=>a[x],o)[last]=v};
+
+/* ---------- helpers ---------- */
+let tt;const toast=m=>{const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(tt);tt=setTimeout(()=>t.style.display='none',2600)};
+const copy=async t=>{try{if(window.Android?.copy){Android.copy(t)}else if(navigator.clipboard){await navigator.clipboard.writeText(t)}else{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}toast('Copied')}catch(e){toast('Could not copy')}};
+const share=t=>{if(window.Android?.share)Android.share(t);else if(navigator.share)navigator.share({text:t}).catch(()=>{});else copy(t)};
+const waNum=p=>{let d=String(p||'').replace(/\D/g,'');if(d.length===10)d='91'+d;return d};
+const waLink=(p,t)=>`https://wa.me/${waNum(p)}${t?`?text=${encodeURIComponent(t)}`:''}`;
+const curLead=()=>S.leads.find(l=>l.id===ui.lead)||S.leads[0]||null;
+const B=k=>!!ui.busy[k];
+async function run(k,fn){ui.busy[k]=true;render();try{await fn()}catch(e){toast(e.message||'Something went wrong')}finally{ui.busy[k]=false;save();render()}}
+
+/* ---------- AI (Google Gemini) ---------- */
+async function ai(system,turns){
+ const key=(S.settings.apiKey||'').trim();
+ if(!key)throw new Error('Add your Gemini API key in Settings first.');
+ const model=(S.settings.model||'gemini-3.8-flash').trim();
+ const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),60000);
+ try{
+  const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','x-goog-api-key':key},
+   body:JSON.stringify({systemInstruction:{parts:[{text:system}]},contents:turns.map(t=>({role:t.role,parts:[{text:t.text}]})),generationConfig:{temperature:0.7}})});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok){const m=j.error?.message||('HTTP '+r.status);
+   if(r.status===429)throw new Error('Free quota reached. Wait a minute and try again.');
+   if(r.status===400&&/api key/i.test(m))throw new Error('Invalid API key. Check Settings.');
+   if(r.status===404)throw new Error('Model not found. Change the model name in Settings.');
+   throw new Error(m.slice(0,180))}
+  const txt=(j.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('').trim();
+  if(!txt)throw new Error(j.promptFeedback?.blockReason?'Blocked by safety filter. Rephrase and retry.':'Empty reply, please try again.');
+  return txt;
+ }catch(e){if(e.name==='AbortError')throw new Error('Timed out. Check your internet.');if(e instanceof TypeError)throw new Error('No internet connection.');throw e}
+ finally{clearTimeout(to)}
+}
+const P=()=>S.profile;
+const facts=()=>`Business: ${P().name}\nAddress: ${P().address}\nPhone/WhatsApp: ${P().phone}\nProgram: ${P().program}\nTiming: ${P().hours}\nEligibility: ${P().eligibility}\nHighlights: ${P().highlights}`;
+const RULES='Use ONLY the facts provided. Never invent fees, salaries, statistics, batch dates, or guarantees of jobs beyond what the highlights say. Be honest and compliant with Google and Meta advertising policies.';
+const turnsOf=msgs=>{const out=[];msgs.slice(-14).forEach(m=>{const role=m.from==='lead'?'user':'model';if(out.length&&out[out.length-1].role===role)out[out.length-1].text+='\n'+m.text;else out.push({role,text:m.text})});while(out.length&&out[0].role!=='user')out.shift();return out};
+
+/* ---------- stats ---------- */
+function stats(){const d=new Date();d.setHours(0,0,0,0);const rk=S.ranks.map(r=>+r.rank).filter(n=>n>0);
+ return{today:S.leads.filter(l=>l.created>=d.getTime()).length,total:S.leads.length,hot:S.leads.filter(l=>l.status==='Hot Lead').length,
+ avg:rk.length?rk.reduce((a,b)=>a+b,0)/rk.length:null,cpl:S.ads.leads>0?S.ads.spend/S.ads.leads:null,
+ waiting:S.leads.filter(l=>{const m=l.msgs[l.msgs.length-1];return m&&m.from==='lead'}).length}}
+
+/* ---------- views ---------- */
+const btn=(label,act,o={})=>`<button class="btn ${o.c||''}" data-act="${act}" ${o.a||''} ${o.busy?'disabled':''}>${o.busy?'Working…':label}</button>`;
+const outBox=(k,title)=>ui.out[k]?`<div class="out">${fmt(ui.out[k])}</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" data-act="copyp" data-p="ui.out.${k}">Copy</button><button class="btn ghost sm" data-act="sharep" data-p="ui.out.${k}">Share</button></div>`:'';
+
+function vHome(){const s=stats();
+ return `<div class="card hero"><div class="k">Center status</div><h2 style="font-size:20px">${esc(P().name)}</h2>
+ <div class="stats"><div><b>${s.today}</b><span>Leads today</span></div><div><b>${s.avg?'#'+s.avg.toFixed(1):'–'}</b><span>Avg map rank</span></div><div><b>${s.cpl?inr(s.cpl):'–'}</b><span>Cost / lead</span></div></div></div>
+ <div class="grid2"><button class="card" style="text-align:left;font:inherit;cursor:pointer" data-act="tab" data-v="maps"><b style="color:var(--b7)">📍 Google Maps</b><div class="mu">Write a post, reply to reviews, improve your profile</div></button>
+ <button class="card" style="text-align:left;font:inherit;cursor:pointer" data-act="tab" data-v="leads"><b style="color:var(--g)">💬 WhatsApp Desk</b><div class="mu">${s.waiting?s.waiting+' lead(s) waiting for a reply':'All leads answered'} · ${s.hot} hot</div></button></div>
+ <div class="card"><h3>🧠 AI daily action plan</h3><div class="mu">Gemini reads your leads, rankings and ad numbers and suggests today’s priorities.</div><div style="margin-top:10px">${btn('Get action plan','plan',{busy:B('plan')})}</div>${outBox('plan')}</div>
+ <div class="card"><div class="row"><h3>Local ranking snapshot</h3><button class="btn ghost sm" style="flex:none" data-act="tab" data-v="maps">Edit</button></div><div class="grid3" style="margin-top:8px">${S.ranks.slice(0,6).map(r=>`<div class="cell" style="cursor:default"><b>#${esc(r.rank)}</b><span>${esc(r.area)}</span></div>`).join('')}</div></div>`}
+
+function vMaps(){const p=ui.post;
+ const topics=[['batch','New batch'],['placement','Placement success'],['counselling','Free counselling'],['seminar','Seminar / demo'],['custom','Custom']];
+ return `<div class="card"><h3>AI Google Post composer</h3><div class="mu">Gemini writes a post from your center profile. Edit it, then copy it into Google Business Profile.</div>
+ <label>Post purpose</label><div class="chips">${topics.map(([k,l])=>`<button class="chip ${p.topic===k?'on':''}" data-act="set" data-p="ui.post.topic" data-v="${k}">${l}</button>`).join('')}</div>
+ ${p.topic==='custom'?`<label>What should the post say?<input data-b="ui.post.custom" value="${esc(p.custom)}" placeholder="e.g. Diwali offer, new weekend batch"></label>`:''}
+ <div class="grid2"><label>Tone<select data-b="ui.post.tone">${['Urgent & High Energy','Professional','Friendly'].map(o=>`<option ${o===p.tone?'selected':''}>${esc(o)}</option>`).join('')}</select></label>
+ <label>Language<select data-b="ui.post.lang">${['English','Hindi','Hinglish'].map(o=>`<option ${o===p.lang?'selected':''}>${o}</option>`).join('')}</select></label></div>
+ <div style="margin-top:12px">${btn('Generate AI post','post',{busy:B('post')})}</div>
+ ${ui.out.post?`<label>Your post <span class="mu">(${ui.out.post.length}/1500 characters)</span><textarea data-b="ui.out.post" style="min-height:200px">${esc(ui.out.post)}</textarea></label>
+ <div class="grid2" style="margin-top:10px"><button class="btn ghost" data-act="copyp" data-p="ui.out.post">Copy</button><button class="btn ghost" data-act="sharep" data-p="ui.out.post">Share</button><button class="btn ghost" data-act="savepost">Save to history</button><a class="btn dark" href="https://business.google.com/" rel="noopener">Open Google Business</a></div>
+ <div class="mu" style="margin-top:8px">Google only lets verified apps publish directly, so copy the post and paste it in the Posts section of your profile.</div>`:''}
+ ${S.posts.length?`<div class="hist"><b>Saved posts</b>${S.posts.map(x=>`<div style="margin-top:8px;border:1px solid var(--bd);border-radius:10px;padding:8px"><div class="mu">${new Date(x.t).toLocaleDateString()}</div>${esc(x.text)}<div style="margin-top:6px"><button class="btn ghost sm" data-act="copypost" data-id="${x.id}">Copy</button> <button class="btn ghost sm" data-act="delpost" data-id="${x.id}">Delete</button></div></div>`).join('')}</div>`:''}</div>
+ <div class="card"><h3>AI review reply</h3><div class="mu">Paste a Google review and get a polite, specific reply.</div>
+ <label>Stars<select data-b="ui.review.stars">${[5,4,3,2,1].map(n=>`<option ${String(n)===ui.review.stars?'selected':''}>${n}</option>`).join('')}</select></label>
+ <label>Review text<textarea data-b="ui.review.text" placeholder="Paste the review here">${esc(ui.review.text)}</textarea></label>
+ <div style="margin-top:10px">${btn('Draft reply','review',{busy:B('review')})}</div>${outBox('review')}</div>
+ <div class="card"><h3>AI profile optimizer</h3><div class="mu">Get a 750-character business description, keywords and Q&amp;A ideas.</div><div style="margin-top:10px">${btn('Optimize my profile','profile',{busy:B('profile')})}</div>${outBox('profile')}</div>
+ <div class="card"><div class="row"><div><h3>Local 3-pack rank tracker</h3><div class="mu">Check Google Maps for “Banking institute near me” at each spot and tap to update.</div></div></div>
+ <div class="grid3" style="margin-top:10px">${S.ranks.map((r,i)=>`<button class="cell ${r.rank>3?'bad':''}" data-act="rankedit" data-i="${i}"><b>#${esc(r.rank)}</b><span>${esc(r.area)}</span><i>${r.rank<=3?'Top 3 pack':'Rank #'+esc(r.rank)}</i></button>`).join('')}</div>
+ <div style="margin-top:10px"><button class="btn ghost" data-act="rankadd">+ Add location</button></div></div>`}
+
+function vLeads(){const l=curLead();
+ const chips=[['📍 Location & timing',()=>`Yes! You can visit us at ${P().address}. ${P().hours}. Please tell me a convenient time for your free career counselling.`],['🎓 Batch & documents',()=>`Our ${P().program} is open for admission. Please bring your 10th, 12th and graduation marksheets and an ID proof. Eligibility: ${P().eligibility}.`]];
+ return `<div class="chips">${S.leads.map(x=>`<button class="chip g ${l&&x.id===l.id?'on':''}" data-act="lead" data-id="${x.id}">${esc(x.name)}</button>`).join('')}<button class="chip" data-act="leadadd">+ Add lead</button></div>
+ ${!l?`<div class="card mu">No leads yet. Tap “+ Add lead” to start.</div>`:`
+ <div class="card"><div class="row" style="align-items:flex-start"><div style="flex:3"><h3>${esc(l.name)}</h3><div class="mu">${esc(l.degree)} · ${esc(l.phone)}</div><div style="color:#047857;font-size:12px;font-weight:600">Goal: ${esc(l.goal)}</div></div>
+ <select data-chg="status" style="flex:2;margin:0;font-size:13px">${STATUSES.map(o=>`<option ${o===l.status?'selected':''}>${o}</option>`).join('')}</select></div>
+ <div class="grid3" style="margin-top:10px"><a class="btn ghost sm" style="text-align:center" href="tel:${esc(l.phone.replace(/[^\d+]/g,''))}">Call</a><a class="btn ghost sm" style="text-align:center" href="${waLink(l.phone)}">WhatsApp</a><button class="btn ghost sm" data-act="leadedit" style="text-align:center">Edit</button></div></div>
+ <div class="card"><div id="chat">${l.msgs.length?l.msgs.map(m=>`<div class="m ${m.from}">${esc(m.text)}<small>${m.from==='bot'?'AI · ':''}${new Date(m.t).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}${m.from!=='lead'?`<a href="${waLink(l.phone,m.text)}">send on WhatsApp ↗</a>`:''}</small></div>`).join(''):'<div class="mu" style="margin:auto">No messages yet.</div>'}${B('chat')?'<div class="m bot typing">AI is typing…</div>':''}</div>
+ <div class="chips" style="margin-top:8px"><button class="chip ${ui.role==='lead'?'on':''}" data-act="set" data-p="ui.role" data-v="lead">Lead says</button><button class="chip ${ui.role==='me'?'on':''}" data-act="set" data-p="ui.role" data-v="me">I reply</button>${chips.map((c,i)=>`<button class="chip" data-act="chip" data-i="${i}">${c[0]}</button>`).join('')}</div>
+ <div class="row" style="margin-top:8px;align-items:flex-end"><textarea id="draft" data-b="ui.draft" style="min-height:44px;height:44px;margin:0;flex:4" placeholder="${ui.role==='lead'?'Type what the lead wrote…':'Type your reply…'}">${esc(ui.draft)}</textarea><button class="btn green" style="flex:1;height:44px" data-act="send" ${B('chat')?'disabled':''}>Send</button></div>
+ <div class="grid2" style="margin-top:8px"><button class="btn ghost sm" data-act="suggest" ${B('suggest')?'disabled':''}>${B('suggest')?'Thinking…':'✨ AI suggest reply'}</button><button class="btn ghost sm" data-act="follow" ${B('follow')?'disabled':''}>${B('follow')?'Thinking…':'✨ AI follow-up'}</button></div>
+ <div class="mu" style="margin-top:8px">${S.settings.auto?'AI Auto is ON: when you send as “Lead says”, the AI replies using your center profile.':'AI Auto is OFF: use “AI suggest reply” to draft answers.'} Real WhatsApp messages can’t be received here; paste the lead’s message, then send the reply with the “send on WhatsApp” link.</div></div>`}`}
+
+function vAds(){const a=S.ads,g=ui.adg,cpl=a.leads>0?a.spend/a.leads:null;
+ return `<div class="card"><div class="row"><h3>Campaign numbers</h3><button class="btn ghost sm" style="flex:none" data-act="adsedit">Update</button></div><div class="mu">Copy these from Meta Ads Manager.</div>
+ <div class="grid2" style="margin-top:10px"><div class="cell" style="cursor:default"><b>${inr(a.daily)}</b><span>Daily budget</span></div><div class="cell" style="cursor:default"><b>${inr(a.spend)}</b><span>Total spend</span></div><div class="cell" style="cursor:default"><b>${a.leads}</b><span>WhatsApp leads</span></div><div class="cell" style="cursor:default"><b>${cpl?inr(cpl):'–'}</b><span>Cost per lead</span></div></div></div>
+ <div class="card"><h3>AI ad copy studio</h3><div class="mu">Creates 3 Meta (Instagram / Facebook) ad variants plus targeting ideas.</div>
+ <label>Goal</label><div class="chips">${['WhatsApp enquiries','Walk-in visits','Brand awareness'].map(k=>`<button class="chip ${g.goal===k?'on':''}" data-act="set" data-p="ui.adg.goal" data-v="${k}">${k}</button>`).join('')}</div>
+ <label>Audience<input data-b="ui.adg.audience" value="${esc(g.audience)}"></label><label>Daily budget (₹)<input data-b="ui.adg.budget" inputmode="numeric" value="${esc(g.budget)}"></label>
+ <div style="margin-top:12px">${btn('Generate ad campaign','ads',{busy:B('ads')})}</div>${outBox('ads')}
+ <div style="margin-top:10px"><a class="btn ghost" href="https://adsmanager.facebook.com/" rel="noopener">Open Meta Ads Manager</a></div></div>`}
+
+function vSet(){const s=S.settings,p=S.profile;
+ const f=(k,l,t)=>`<label>${l}${t?`<textarea data-b="S.profile.${k}" style="min-height:70px">${esc(p[k])}</textarea>`:`<input data-b="S.profile.${k}" value="${esc(p[k])}">`}</label>`;
+ return `<div class="card"><h3>Gemini AI connection</h3><div class="mu">All AI features use Google Gemini. Get a free key at <a href="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a>. The key is stored only on this phone.</div>
+ <label>API key<input type="password" data-b="S.settings.apiKey" value="${esc(s.apiKey)}" autocomplete="off" placeholder="AIza..."></label>
+ <label>Model<input data-b="S.settings.model" value="${esc(s.model)}"></label>
+ <div style="margin-top:12px">${btn('Test connection','test',{busy:B('test')})}</div>
+ <div class="sw"><div><b>AI Auto-reply</b><div class="mu">Answer leads automatically in the WhatsApp Desk</div></div><button class="chip ${s.auto?'on':''}" data-act="auto" style="flex:none">${s.auto?'ON':'OFF'}</button></div></div>
+ <div class="card"><h3>Center profile</h3><div class="mu">Every AI feature uses these facts. Keep them accurate and only claim what you can deliver.</div>
+ ${f('name','Business name')}${f('address','Address',1)}${f('phone','Phone / WhatsApp')}${f('program','Program')}${f('hours','Timing')}${f('eligibility','Eligibility')}${f('highlights','Highlights you may promote',1)}</div>
+ <div class="card"><h3>Data</h3><div class="mu">Everything is stored on this phone. When you use an AI feature, the text involved (including lead messages) is sent to Google’s Gemini API; free-tier data may be used by Google to improve its products.</div>
+ <div class="grid2" style="margin-top:10px"><button class="btn ghost" data-act="export">Share backup</button><button class="btn ghost" data-act="clearleads">Clear all leads</button></div>
+ <div style="margin-top:10px"><button class="btn red" data-act="reset">Reset everything</button></div></div>`}
+
+function render(){const y=window.scrollY;const tabs=[['home','📊','Overview'],['maps','📍','Maps'],['leads','💬','Leads'],['ads','📢','Ads'],['set','⚙️','Settings']];
+ $('#app').innerHTML=`<div id="shell"><header><div><h1>BankEdge AI <span class="tag">GURUGRAM</span></h1><small>${esc(P().address.split(',').slice(0,3).join(','))}</small></div><button class="pill" data-act="auto"><span class="dot ${S.settings.auto?'on':''}"></span>${S.settings.auto?'AI AUTO: ON':'AI PAUSED'}</button></header><main>${({home:vHome,maps:vMaps,leads:vLeads,ads:vAds,set:vSet})[ui.tab]()}</main><nav>${tabs.map(([k,i,l])=>`<button class="${ui.tab===k?'on':''}" data-act="tab" data-v="${k}"><span>${i}</span>${l}</button>`).join('')}</nav></div>`;
+ window.scrollTo(0,y);const c=$('#chat');if(c)c.scrollTop=c.scrollHeight}
+
+/* ---------- modal ---------- */
+function modal(title,fields,okText,onOk,body=''){
+ $('#modal').innerHTML=`<div class="ov"><form class="sheet" id="mf"><h3>${esc(title)}</h3>${body?`<p class="mu">${esc(body)}</p>`:''}${fields.map(f=>`<label>${esc(f.label)}${f.options?`<select name="${f.name}">${f.options.map(o=>`<option ${o===f.value?'selected':''}>${esc(o)}</option>`).join('')}</select>`:`<input name="${f.name}" type="${f.type||'text'}" ${f.type==='number'?'inputmode="decimal" step="any"':''} value="${esc(f.value??'')}">`}</label>`).join('')}<div class="row"><button type="button" class="btn ghost" data-m="x">Cancel</button><button class="btn ${okText==='Delete'||okText==='Reset'?'red':''}">${okText}</button></div></form></div>`;
+ const close=()=>$('#modal').innerHTML='';
+ $('#mf').addEventListener('submit',e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));close();onOk(d)});
+ $('#mf [data-m]').addEventListener('click',close);
+}
+const leadFields=l=>[{name:'name',label:'Name',value:l?.name},{name:'degree',label:'Qualification',value:l?.degree},{name:'phone',label:'Phone',type:'tel',value:l?.phone},{name:'goal',label:'Target bank / role',value:l?.goal},{name:'status',label:'Status',options:STATUSES,value:l?.status||'New'}];
+
+/* ---------- actions ---------- */
+const A={
+ tab(e){ui.tab=e.dataset.v;window.scrollTo(0,0);render()},
+ set(e){setPath(e.dataset.p,e.dataset.v);render()},
+ auto(){S.settings.auto=!S.settings.auto;save();render()},
+ copyp(e){copy(getPath(e.dataset.p)||'')},sharep(e){share(getPath(e.dataset.p)||'')},
+ plan(){const s=stats();return run('plan',async()=>{
+  const by=STATUSES.map(x=>`${x}: ${S.leads.filter(l=>l.status===x).length}`).join(', ');
+  ui.out.plan=await ai(`You are a growth advisor for a small banking-training institute. ${RULES} Reply with a short plan: 4-5 concrete actions for today, most important first, each one line. No preamble.`,[{role:'user',text:`${facts()}\n\nLeads: ${by}. Leads waiting for reply: ${s.waiting}. Average Google Maps rank across tracked spots: ${s.avg?s.avg.toFixed(1):'unknown'}. Weak spots (rank>3): ${S.ranks.filter(r=>r.rank>3).map(r=>r.area+' #'+r.rank).join(', ')||'none'}. Ads: daily ₹${S.ads.daily}, spend ₹${S.ads.spend}, leads ${S.ads.leads}, cost/lead ${s.cpl?'₹'+s.cpl.toFixed(0):'n/a'}. Google posts saved: ${S.posts.length}.`}])})},
+ post(){const p=ui.post;const T={batch:'announce admissions for the new batch',placement:'celebrate placement success and interview drives (no invented names or numbers)',counselling:'invite people for free career counselling at the center',seminar:'invite people to a free demo class / seminar',custom:p.custom||'promote the center'}[p.topic];
+  return run('post',async()=>{ui.out.post=await ai(`You write Google Business Profile posts for a local institute. ${RULES} Output only the post text: plain text, max 1200 characters, a few relevant emojis, no hashtags, end with a call to action that includes the phone number.`,[{role:'user',text:`${facts()}\n\nWrite a post to ${T}.\nTone: ${p.tone}.\nLanguage: ${p.lang}.`}])})},
+ savepost(){if(!ui.out.post)return;S.posts.unshift({id:uid(),t:Date.now(),text:ui.out.post});save();toast('Saved');render()},
+ copypost(e){copy(S.posts.find(x=>x.id===e.dataset.id)?.text||'')},
+ delpost(e){S.posts=S.posts.filter(x=>x.id!==e.dataset.id);save();render()},
+ review(){if(!ui.review.text.trim())return toast('Paste a review first');
+  return run('review',async()=>{ui.out.review=await ai(`You reply to Google reviews for a local institute. ${RULES} Under 70 words. Address the reviewer's points specifically. For negative reviews apologise sincerely and invite them to contact the center to resolve it. Output only the reply.`,[{role:'user',text:`${facts()}\n\nReview (${ui.review.stars} stars):\n${ui.review.text}`}])})},
+ profile(){return run('profile',async()=>{ui.out.profile=await ai(`You are a local SEO expert. ${RULES} Be concise.`,[{role:'user',text:`${facts()}\n\nGive: 1) a business description of about 750 characters, 2) 10 local keywords/search phrases to use, 3) 5 Q&A pairs to add to the profile, 4) 5 profile to-dos (photos, services, attributes, categories, posts).`}])})},
+ rankedit(e){const i=+e.dataset.i,r=S.ranks[i];modal('Update rank',[{name:'area',label:'Location',value:r.area},{name:'rank',label:'Rank on Google Maps (1-20)',type:'number',value:r.rank}],'Save',d=>{r.area=d.area.trim()||r.area;r.rank=Math.min(20,Math.max(1,Math.round(+d.rank)||r.rank));save();render()})},
+ rankadd(){modal('Add location',[{name:'area',label:'Location'},{name:'rank',label:'Rank on Google Maps (1-20)',type:'number',value:3}],'Add',d=>{if(!d.area.trim())return;S.ranks.push({area:d.area.trim(),rank:Math.min(20,Math.max(1,Math.round(+d.rank)||3))});save();render()})},
+ lead(e){ui.lead=e.dataset.id;render()},
+ leadadd(){modal('Add lead',leadFields(),'Add',d=>{if(!d.name.trim())return;const l={id:uid(),name:d.name.trim(),degree:d.degree,phone:d.phone,goal:d.goal,status:d.status,created:Date.now(),msgs:[]};S.leads.unshift(l);ui.lead=l.id;save();render()})},
+ leadedit(){const l=curLead();if(!l)return;modal('Edit lead',leadFields(l),'Save',d=>{Object.assign(l,{name:d.name.trim()||l.name,degree:d.degree,phone:d.phone,goal:d.goal,status:d.status});save();render()});
+  const del=document.createElement('button');del.type='button';del.className='btn red';del.style.marginTop='10px';del.textContent='Delete lead';del.onclick=()=>{$('#modal').innerHTML='';modal('Delete lead?',[],'Delete',()=>{S.leads=S.leads.filter(x=>x.id!==l.id);ui.lead=null;save();render()},`${l.name} and the chat will be removed.`)};$('#mf').appendChild(del)},
+ chip(e){const l=curLead();const t=[()=>`Yes! You can visit us at ${P().address}. ${P().hours}. Please tell me a convenient time for your free career counselling.`,()=>`Our ${P().program} is open for admission. Please bring your 10th, 12th and graduation marksheets and an ID proof. Eligibility: ${P().eligibility}.`][+e.dataset.i];ui.draft=t();ui.role='me';render()},
+ async send(){const l=curLead(),t=ui.draft.trim();if(!l||!t)return;
+  l.msgs.push({id:uid(),from:ui.role==='lead'?'lead':'me',text:t,t:Date.now()});ui.draft='';save();
+  if(ui.role==='lead'&&S.settings.auto){return run('chat',async()=>{const turns=turnsOf(l.msgs);const r=await ai(`You are the WhatsApp admissions assistant of this institute, available 24x7. ${RULES} Reply in the same language the person uses (English, Hindi or Hinglish), under 60 words, friendly and professional. Answer their question, check eligibility if relevant, invite them to visit or book free counselling, and ask for a convenient time. If asked about fees, say the counsellor will share details.\n\n${facts()}`,turns);l.msgs.push({id:uid(),from:'bot',text:r,t:Date.now()});if(l.status==='New')l.status='Hot Lead'})}
+  render();setTimeout(()=>$('#draft')?.focus(),0)},
+ suggest(){const l=curLead();const last=l?.msgs[l.msgs.length-1];if(!last||last.from!=='lead')return toast('No new lead message to answer');
+  return run('suggest',async()=>{ui.draft=await ai(`You draft WhatsApp replies for a counsellor at this institute. ${RULES} Same language as the lead, under 60 words, end by inviting them to visit or book counselling.\n\n${facts()}`,turnsOf(l.msgs));ui.role='me'})},
+ follow(){const l=curLead();if(!l)return;
+  return run('follow',async()=>{ui.draft=await ai(`You write short, warm WhatsApp follow-up messages for a counsellor. ${RULES} Under 50 words, one clear next step, no pressure.\n\n${facts()}`,[{role:'user',text:`Lead: ${l.name}, ${l.degree}, wants ${l.goal}. Status: ${l.status}.\nRecent chat:\n${l.msgs.slice(-6).map(m=>(m.from==='lead'?'Lead: ':'Us: ')+m.text).join('\n')||'(no messages yet)'}\n\nWrite the next follow-up message.`}]);ui.role='me'})},
+ adsedit(){const a=S.ads;modal('Campaign numbers',[{name:'daily',label:'Daily budget (₹)',type:'number',value:a.daily},{name:'spend',label:'Total spend (₹)',type:'number',value:a.spend},{name:'leads',label:'WhatsApp leads',type:'number',value:a.leads}],'Save',d=>{a.daily=Math.max(0,+d.daily||0);a.spend=Math.max(0,+d.spend||0);a.leads=Math.max(0,Math.round(+d.leads)||0);save();render()})},
+ ads(){const g=ui.adg;return run('ads',async()=>{ui.out.ads=await ai(`You are a performance marketer for local education businesses in India. ${RULES} Follow Meta ad policies: never use personal-attribute phrasing (such as "Are you unemployed?"), no guaranteed-outcome claims, no misleading urgency.`,[{role:'user',text:`${facts()}\n\nGoal: ${g.goal}. Audience: ${g.audience}. Daily budget: ₹${g.budget}.\n\nCreate 3 ad variants. For each: Primary text (max 300 characters), Headline (max 40 characters), Call-to-action button, Image/video idea. Then: targeting suggestions (age, locations, interests), how to split the budget, and 3 A/B tests to run first.`}])})},
+ test(){return run('test',async()=>{await ai('Reply with the single word OK.',[{role:'user',text:'ping'}]);toast('Connection works ✓')})},
+ export(){const c=JSON.parse(JSON.stringify(S));c.settings.apiKey='';share(JSON.stringify(c,null,1))},
+ clearleads(){modal('Delete all leads?',[],'Delete',()=>{S.leads=[];ui.lead=null;save();render()},'All leads and chats will be removed.')},
+ reset(){modal('Reset everything?',[],'Reset',()=>{const k=S.settings.apiKey;S=DEF();S.settings.apiKey=k;ui.lead=null;ui.out={plan:'',post:'',review:'',profile:'',ads:''};save();render();toast('Reset done')},'Profile, leads, posts and numbers go back to defaults. Your API key is kept.')}
+};
+document.addEventListener('click',e=>{const t=e.target.closest('[data-act]');if(!t)return;const f=A[t.dataset.act];if(f)f(t)});
+document.addEventListener('input',e=>{const p=e.target.dataset?.b;if(!p)return;setPath(p,e.target.value);if(p.startsWith('S.'))save()});
+document.addEventListener('change',e=>{const t=e.target;if(t.dataset?.chg==='status'){const l=curLead();if(l){l.status=t.value;save()}}if(t.dataset?.b&&t.tagName==='SELECT'){setPath(t.dataset.b,t.value)}});
+document.addEventListener('keydown',e=>{if(e.target.id==='draft'&&e.key==='Enter'&&!e.shiftKey){e.preventDefault();A.send()}});
+render();
+})();
+</script>
+</body>
+</html>
